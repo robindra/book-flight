@@ -1,0 +1,6 @@
+<p>search-results works!</p>
+<button (click)="addNewRecord()">Add New Record</button> 
+<button type="button" (click)="getAllPost()">Get All Posts</button>
+<ul *ngIf="allPosts && allPosts.length">
+    <li  *ngFor="let post of allPosts">{{post.title}} {{post.date}}</li>
+</ul>
