@@ -1,96 +1,241 @@
-<div id="booking" class="section">
-    <div class="section-center">
-        <div class="container">
-            <div class="row">
-                <div class="booking-form">
-                    <form>
-                        <div class="form-group">
-                            <div class="form-checkbox">
-                                <label for="roundtrip">
-                                    <input type="radio" id="roundtrip" name="flight-type">
-                                    <span></span>Roundtrip
-                                </label>
-                                <label for="one-way">
-                                    <input type="radio" id="one-way" name="flight-type">
-                                    <span></span>One way
-                                </label>
-                                <label for="multi-city">
-                                    <input type="radio" id="multi-city" name="flight-type">
-                                    <span></span>Multi-City
-                                </label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <span class="form-label">Flying from</span>
-                                    <input class="form-control" type="text" placeholder="City or airport">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <span class="form-label">Flyning to</span>
-                                    <input class="form-control" type="text" placeholder="City or airport">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <span class="form-label">Departing</span>
-                                    <input class="form-control" type="date" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <span class="form-label">Returning</span>
-                                    <input class="form-control" type="date" required>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <span class="form-label">Adults (18+)</span>
-                                    <select class="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                    </select>
-                                    <span class="select-arrow"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <span class="form-label">Children (0-17)</span>
-                                    <select class="form-control">
-                                        <option>0</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                    </select>
-                                    <span class="select-arrow"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <span class="form-label">Travel class</span>
-                                    <select class="form-control">
-                                        <option>Economy class</option>
-                                        <option>Business class</option>
-                                        <option>First class</option>
-                                    </select>
-                                    <span class="select-arrow"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-btn">
-                                    <button class="submit-btn">Show flights</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+<div class="section">
+  <div class="section-center">
+    <div class="container">
+      <div class="row">
+        <div class="booking-form">
+          <form [formGroup]="searchForm" (ngSubmit)="onSubmitSearchForm()">
+            <div class="form-group">
+              <div class="form-checkbox">
+                <label
+                  for="{{ trip.type }}"
+                  *ngFor="let trip of tripTypes"
+                >
+                  <input
+                    type="radio"
+                    id="{{ trip.type }}"
+                    formControlName="tripType"
+                    value="{{ trip.type }}"
+                  />
+                  <span></span>{{ trip.label }}
+                </label>
+                <!-- <label for="one-way">
+                  <input type="radio" id="one-way" name="flight-type" />
+                  <span></span>One way
+                </label>
+                <label for="multi-city">
+                  <input type="radio" id="multi-city" name="flight-type" />
+                  <span></span>Multi-City
+                </label> -->
+              </div>
             </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <span class="form-label">Flying from</span>
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="City or airport"
+                    formControlName="tripFrom"
+                  />
+                  <span
+                    *ngIf="!f['tripFrom'].valid && f['tripFrom'].touched"
+                    class="error"
+                    >From is required</span
+                  >
+                  <ul
+                    *ngIf="
+                      searchCodeFor == 'tripFrom' &&
+                      airportWithCountryCode.length
+                    "
+                    class="countryCode"
+                  >
+                    <li
+                      *ngFor="let airport of airportWithCountryCode"
+                      style="color: white; border-bottom: 1px solid red"
+                      (click)="onSelectAirport(airport, 'tripFrom')"
+                    >
+                      <span>
+                        {{ airport.cityName }}, {{ airport.countryName }}
+                      </span>
+                      <br />
+                      <span>
+                        ({{ airport.airportName }} - {{ airport.cityCode }})
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <span class="form-label">Flyning to</span>
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="City or airport"
+                    formControlName="tripTo"
+                  />
+                  <span
+                    *ngIf="!f['tripTo'].valid && f['tripTo'].touched"
+                    class="error"
+                    >From is required</span
+                  >
+                  <ul
+                    *ngIf="
+                      searchCodeFor == 'tripTo' && airportWithCountryCode.length
+                    "
+                    class="countryCode"
+                  >
+                    <li
+                      *ngFor="let airport of airportWithCountryCode"
+                      style="color: white; border-bottom: 1px solid red"
+                      (click)="onSelectAirport(airport, 'tripTo')"
+                    >
+                      <span>
+                        {{ airport.cityName }}, {{ airport.countryName }}
+                      </span>
+                      <br />
+                      <span>
+                        ({{ airport.airportName }} - {{ airport.cityCode }})
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <span class="form-label">Departing</span>
+                  <input
+                    class="form-control"
+                    type="date"
+                    required
+                    formControlName="departOn"
+                    min="{{ minValidStartDate }}"
+                  />
+                  <span
+                    *ngIf="!f['departOn'].valid && f['departOn'].touched"
+                    class="error"
+                    >From is required</span
+                  >
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <span class="form-label">Returning</span>
+                  <input
+                    class="form-control"
+                    type="date"
+                    required
+                    formControlName="returnOn"
+                    min="{{ minValidReturnDate }}"
+                    [readOnly]="disableReturnDate"
+                  />
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <span class="form-label">Adults (18+)</span>
+                  <select class="form-control" formControlName="adults">
+                    <option
+                      value="{{ traveller }}"
+                      *ngFor="let traveller of travellers"
+                    >
+                      {{ traveller }}
+                    </option>
+                  </select>
+                  <span class="select-arrow"></span>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <span class="form-label">Children (0-17)</span>
+                  <select class="form-control" formControlName="children">
+                    <option
+                      value="{{ traveller }}"
+                      *ngFor="let traveller of travellers"
+                    >
+                      {{ traveller }}
+                    </option>
+                  </select>
+                  <span class="select-arrow"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <span class="form-label">Travel class</span>
+                  <select class="form-control" formControlName="travelClass">
+                    <option>Economy class</option>
+                    <option>Business class</option>
+                    <option>First class</option>
+                  </select>
+                  <span class="select-arrow"></span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-btn">
+                  <button class="submit-btn" type="submit" [disabled]="isLoading">Show flights</button>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
+</div>
+
+<div *ngIf="isLoading" style="text-align: center;">
+  <app-loding-spinner></app-loding-spinner>
+</div>
+<div class="container" *ngIf="oneWaySerachResults.length && isCarrierDataAvailable">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Sorted</th>
+        <th scope="col">Departure</th>
+        <th scope="col">Duration</th>
+        <th scope="col">Arival</th>
+        <th scope="col">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let flightInfo of oneWaySerachResults">
+        <th scope="row">
+          <span
+            *ngFor="let carrier of flightInfo.summary.carrierCodes"
+            class="span-block"
+          >
+            {{ carrier.carrierCode|carrierName }}, {{ carrier.carrierCode }}-{{
+              carrier.aircraft
+            }}
+          </span>
+        </th>
+        <td>
+          {{ flightInfo.segments[0].departure.iataCode }} - T{{
+            flightInfo.segments[0].departure.terminal
+          }}
+          - {{ flightInfo.segments[0].departure.at }}
+        </td>
+        <td>{{flightInfo.summary.totalHours}} hours/ 
+          <div style="display: inline;">
+            <span>{{flightInfo.summary.routes.connecting > 0 ? flightInfo.summary.routes.connecting : 'No'}} Stop</span>
+          </div>
+          <div *ngIf="flightInfo.summary.routes.connecting > 0">
+            Via: 
+            <span *ngFor="let route of flightInfo.summary.routes.via" style="min-width: 20px;">{{route}} </span>
+          </div>
+        </td>
+          
+        <td>{{ flightInfo.summary.arrival.iataCode }} - T{{
+          flightInfo.summary.departure.terminal
+        }}
+        - {{ flightInfo.summary.departure.at }}</td>
+        <td>{{ flightInfo.summary.price }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

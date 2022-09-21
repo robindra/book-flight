@@ -4,18 +4,18 @@ import { FormsModule } from '@angular/forms';
 
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './page/login.component';
-import { LodingSpinnerComponent } from 'src/app/shared/ui/loding-spinner/loding-spinner.component';
+import { SharedModule } from 'src/app/shared/share.module';
 
 
 @NgModule({
   declarations: [
-    LoginComponent, 
-    LodingSpinnerComponent
+    LoginComponent
   ],
   imports: [
     CommonModule,
     LoginRoutingModule,
-    FormsModule
+    FormsModule,
+    SharedModule
   ]
 })
 export class LoginModule { }

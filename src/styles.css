@@ -18,6 +18,8 @@
     background-image: url('../src/assets/images/background.jpg');
 	background-size: cover;
 	background-position: center;
+	height: 89vh;
+	width: 99%;
 }
 
 .booking-form {
