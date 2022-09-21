@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
     authObs.subscribe(
       (resData) => {
         this.isLoading = false;
-        this._router.navigate(['/search-results'])
+        this._router.navigate(['/home'])
       },
       (errorMessage) => {
         this.error = errorMessage;

@@ -5,6 +5,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { Observable, Subject, throwError, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +29,7 @@ export class AuthService {
   signup(email: string, password: string) {
     return this._http
       .post<AuthResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBTJofvfKTSOpd5TZvr647quZtDvjIhZXE',
+        `${environment.FIREBASE_BASE_URL}accounts:signUp?key=AIzaSyBTJofvfKTSOpd5TZvr647quZtDvjIhZXE`,
         {
           email: email,
           password: password,
@@ -57,7 +58,7 @@ export class AuthService {
   login(email: string, password: string) {
     return this._http
       .post<AuthResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBTJofvfKTSOpd5TZvr647quZtDvjIhZXE',
+        `${environment.FIREBASE_BASE_URL}accounts:signInWithPassword?key=AIzaSyBTJofvfKTSOpd5TZvr647quZtDvjIhZXE`,
         {
           email: email,
           password: password,
@@ -134,6 +135,7 @@ export class AuthService {
     this.user.next(new UserModel('', '', '', new Date()));
     this._router.navigate(['/login']);
     localStorage.removeItem('userData');
+    localStorage.removeItem('tokenData');
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
     }

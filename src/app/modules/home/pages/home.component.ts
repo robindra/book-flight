@@ -26,6 +26,7 @@ import { AmadeusService } from 'src/app/shared/services/amadeus.service';
 
 import * as moment from 'moment';
 import { TripType } from '../interface/trip-type.interface';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -263,7 +264,7 @@ export class HomeComponent implements OnInit {
   getTokens() {
     const payLoad = {
       grant_type: 'client_credentials',
-      client_id: 'HATF67AUUMtwfRxS0GFKAuzzAl0EBwza',
+      client_id: environment.API_ID,
       client_secret: 'bMYj94SnZzuWAUe8',
     };
     this.getTokenSubs = this._amadeusService
@@ -303,6 +304,7 @@ export class HomeComponent implements OnInit {
     this.noFlightFound = false;
     this.isLoading = true;
     this.isCarrierDataAvailable = false;
+    
 
     // the api require time time in the payload as we show only date selection so we need to create current time
     const currentTime = moment(new Date()).format('HH:mm:ss');
@@ -315,6 +317,11 @@ export class HomeComponent implements OnInit {
 
     // trip return date (if any)
     const returnDate = this.searchForm.value.returnOn;
+
+    // check the require field are entered 
+    if (!this.tripFromDetails.cityCode || !this.tripToDetails.cityCode || !departDate.length || !returnDate.length) {
+      return;
+    } 
 
     // creating a variable to hold return flight search payload if user select two way trip
     let returnPayLoad: SearchPayLoad;

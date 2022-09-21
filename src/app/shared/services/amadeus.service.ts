@@ -5,6 +5,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, tap, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import {
   CarrierCodeResponse,
   CarrierCodes,
@@ -24,7 +25,10 @@ export class AmadeusService {
   );
   storeAirLineCode: any;
   carrierDetailsWithCode: CarrierCodes;
-  constructor(private _httpClient: HttpClient, private _utilService: UtilsService) {}
+  constructor(
+    private _httpClient: HttpClient,
+    private _utilService: UtilsService
+  ) {}
 
   getAuthToken(payLoad: TokenPayLoad) {
     let body = new URLSearchParams();
@@ -40,7 +44,7 @@ export class AmadeusService {
     };
     return this._httpClient
       .post<TokenResponse>(
-        'https://test.api.amadeus.com/v1/security/oauth2/token',
+        `${environment.AMADEUS_BASE_URL}security/oauth2/token`,
         body,
         options
       )
@@ -82,8 +86,7 @@ export class AmadeusService {
   getCityName(cityCode: string) {
     return this._httpClient
       .get(
-        'https://test.api.amadeus.com/v1/reference-data/locations?subType=CITY,AIRPORT&keyword=' +
-          cityCode
+        `${environment.AMADEUS_BASE_URL}reference-data/locations?subType=CITY,AIRPORT&keyword=${cityCode}`
       )
       .pipe(catchError(this.handleErrors));
   }
@@ -91,8 +94,7 @@ export class AmadeusService {
   getAirportsByText(cityCode: string) {
     return this._httpClient
       .get(
-        'https://test.api.amadeus.com/v1/reference-data/locations?subType=CITY,AIRPORT&keyword=' +
-          cityCode
+        `${environment.AMADEUS_BASE_URL}reference-data/locations?subType=CITY,AIRPORT&keyword=${cityCode}`
       )
       .pipe(
         catchError(this.handleErrors),
@@ -113,7 +115,7 @@ export class AmadeusService {
   flightAvailabilities(payLoad: SearchPayLoad) {
     return this._httpClient
       .post(
-        'https://test.api.amadeus.com/v1/shopping/availability/flight-availabilities',
+        `${environment.AMADEUS_BASE_URL}shopping/availability/flight-availabilities`,
         payLoad
       )
       .pipe(
@@ -136,9 +138,9 @@ export class AmadeusService {
   // }
 
   /**
-   * 
-   * @param carrierCodes 
-   * @returns 
+   *
+   * @param carrierCodes
+   * @returns
    */
   getCarrierDataByCode(carrierCodes: string) {
     return this._httpClient
@@ -146,21 +148,25 @@ export class AmadeusService {
         'https://test.api.amadeus.com/v1/reference-data/airlines?airlineCodes=' +
           carrierCodes
       )
-      .pipe(catchError(this.handleErrors), map((response: any) => {
-        let modifiedResponse: any = {};
-        response.data.forEach((item: CarrierCodeResponse) => {
-          modifiedResponse[item.iataCode] = item;
-        });
-        return modifiedResponse;
-      }), tap((data) => {
-        this.carrierDetailsWithCode = data;
-      }));
+      .pipe(
+        catchError(this.handleErrors),
+        map((response: any) => {
+          let modifiedResponse: any = {};
+          response.data.forEach((item: CarrierCodeResponse) => {
+            modifiedResponse[item.iataCode] = item;
+          });
+          return modifiedResponse;
+        }),
+        tap((data) => {
+          this.carrierDetailsWithCode = data;
+        })
+      );
   }
 
   /**
-   * 
-   * @param errorRes 
-   * @returns 
+   *
+   * @param errorRes
+   * @returns
    */
   private handleErrors = (errorRes: HttpErrorResponse) => {
     let errorMsg = 'An unknown error occured!';
@@ -172,31 +178,42 @@ export class AmadeusService {
   };
 
   /**
-   * 
-   * @param segements 
-   * @returns 
+   *
+   * @param segements
+   * @returns
    */
   private generateSummary(segements?: any) {
-    let summary:any = {
+    let summary: any = {
       departure: segements[0].departure,
-      arrival: segements.length > 1 ? segements[segements.length - 1].arrival : segements[0].arrival
-    }
+      arrival:
+        segements.length > 1
+          ? segements[segements.length - 1].arrival
+          : segements[0].arrival,
+    };
     const departTime = segements[0].departure.at;
-    const arrivalTime = segements.length ? segements[segements.length - 1].arrival.at : segements[0].arrival.at;    
+    const arrivalTime = segements.length
+      ? segements[segements.length - 1].arrival.at
+      : segements[0].arrival.at;
     const carrierCodes: any = [];
     summary.totalHours = this._utilService.calTimeDiff(departTime, arrivalTime);
     summary.price = Math.floor(Math.random() * (15000 - 5000 + 1) + 5000);
     summary.routes = {
       connecting: segements.length - 1,
-      via: segements.length > 1 ? segements.slice(1).map((segment:any) => segment.departure.iataCode) : []
-    }
+      via:
+        segements.length > 1
+          ? segements.slice(1).map((segment: any) => segment.departure.iataCode)
+          : [],
+    };
     segements.forEach((item: any) => {
       if (JSON.stringify(carrierCodes).indexOf(item.carrierCode) == -1) {
-        carrierCodes.push({ carrierCode: item.carrierCode, aircraft: item.aircraft.code });
+        carrierCodes.push({
+          carrierCode: item.carrierCode,
+          aircraft: item.aircraft.code,
+        });
       }
     });
-    summary.carrierCodes = carrierCodes
-    
+    summary.carrierCodes = carrierCodes;
+
     return summary;
   }
 }
