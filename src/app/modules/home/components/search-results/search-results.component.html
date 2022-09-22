@@ -1,0 +1,106 @@
+<div class="row" *ngIf="searchResults.length">
+  <div class="cols-md-5 text-center">
+    <h2>{{ searchResultFor }}</h2>
+  </div>
+</div>
+<div class="container result-wrapper" *ngIf="searchResults.length">
+  <form [formGroup]="filterForm">
+    <div class="form-group text-center">
+      <div class="form-checkbox">
+        <label
+          for="{{ connecting.type }}"
+          *ngFor="let connecting of connectingOptions"
+          class="connection-label"
+        >
+          <input
+            type="radio"
+            id="{{ connecting.type }}"
+            formControlName="connectingFlight"
+            value="{{ connecting.type }}"
+          />
+          <span></span> {{ connecting.label }}
+        </label>
+      </div>
+    </div>
+  </form>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Carrier Name</th>
+        <th scope="col">Departure</th>
+        <th
+          scope="col"
+          (click)="sortResult('duration')"
+          class="click-event-pointer"
+        >
+          Duration
+          <i class="arrow up" [ngClass]="{'up': durationOrderByAsc, 'down': !durationOrderByAsc}"></i>
+          <!-- <i class="arrow down"></i> -->
+        </th>
+        <th scope="col">Arival</th>
+        <th
+          scope="col"
+          (click)="sortResult('price')"
+          class="click-event-pointer"
+        >
+          Price
+          <i class="arrow up" [ngClass]="{'up': priceOrderByAsc, 'down': !priceOrderByAsc }"></i>
+          <!-- <i class="arrow down"></i> -->
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let flightInfo of searchResults | filterResults: filterCase">
+        <th scope="row">
+          <span
+            *ngFor="let carrier of flightInfo.summary.carrierCodes"
+            class="span-block"
+          >
+            {{ carrier.carrierCode | carrierName }}
+            ({{ carrier.carrierCode }}-{{ carrier.aircraft }})
+          </span>
+        </th>
+        <td>
+          {{ flightInfo.segments[0].departure.iataCode }} - T{{
+            flightInfo.segments[0].departure.terminal
+          }}
+          <span class="span-block">{{
+            flightInfo.segments[0].departure.at | date: "medium"
+          }}</span>
+        </td>
+        <td>
+          {{ flightInfo.summary.totalHours }} hours/
+          <div style="display: inline">
+            <span
+              >{{
+                flightInfo.summary.routes.connecting > 0
+                  ? flightInfo.summary.routes.connecting
+                  : "No"
+              }}
+              Stop</span
+            >
+          </div>
+          <div *ngIf="flightInfo.summary.routes.connecting > 0">
+            Via:
+            <span
+              *ngFor="let route of flightInfo.summary.routes.via"
+              style="min-width: 20px"
+              >{{ route }}
+            </span>
+          </div>
+        </td>
+
+        <td>
+          {{ flightInfo.summary.arrival.iataCode }} - T{{
+            flightInfo.summary.departure.terminal
+          }}
+          <span class="span-block">
+            {{ flightInfo.summary.departure.at | date: "medium" }}</span
+          >
+        </td>
+        <td>{{ flightInfo.summary.price }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

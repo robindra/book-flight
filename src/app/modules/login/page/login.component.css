@@ -1,4 +1,4 @@
-/ Change the white to any color /
+/** Change the white to any color */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
@@ -6,13 +6,18 @@ input:-webkit-autofill:active{
     -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
-
+.login-form-wrapper {
+    background-color: rgba(0,0,0,.4);
+}
 .form-outline .form-control:focus{
     -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
-/ You can add global styles to this file, and also import other style files /
+/** You can add global styles to this file, and also import other style files */
 .form-outline {
     position: relative;
+}
+.form-label {
+    color: #fff;
 }
 
 .form-outline .form-control~.form-label {

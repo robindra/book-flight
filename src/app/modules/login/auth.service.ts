@@ -21,12 +21,12 @@ export class AuthService {
   ) {}
 
   /**
-   *
-   * @param email
-   * @param password
-   * @returns
+   *  @descripton The below method will handle to signup the user on firsbase database
+   * @param email string
+   * @param password string
+   * @returns an observable
    */
-  signup(email: string, password: string) {
+  signup(email: string, password: string): Observable<AuthResponseData> {
     return this._http
       .post<AuthResponseData>(
         `${environment.FIREBASE_BASE_URL}accounts:signUp?key=AIzaSyBTJofvfKTSOpd5TZvr647quZtDvjIhZXE`,
@@ -50,12 +50,12 @@ export class AuthService {
   }
 
   /**
-   *
-   * @param email
-   * @param password
-   * @returns
+   *  @descripton The below method will handle to login the user on firsbase
+   * @param email string
+   * @param password string
+   * @returns an observable
    */
-  login(email: string, password: string) {
+  login(email: string, password: string): Observable<AuthResponseData> {
     return this._http
       .post<AuthResponseData>(
         `${environment.FIREBASE_BASE_URL}accounts:signInWithPassword?key=AIzaSyBTJofvfKTSOpd5TZvr647quZtDvjIhZXE`,
@@ -79,7 +79,7 @@ export class AuthService {
   }
 
   /**
-   *
+   * @description handleAuthentication will handle to store the user authentication data and auto logout process
    * @param email
    * @param userId
    * @param token
@@ -91,28 +91,41 @@ export class AuthService {
     token: string,
     expiresIn: number
   ) {
+    // calculate the expirate date as per input 
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+
+    // update the user model with new information 
     const user = new UserModel(email, userId, token, expirationDate);
+
+    // notify the user authentication information 
     this.user.next(user);
+
+    // set a timeout to auto logout the user 
     this.autoLogout(expiresIn * 1000);
+
+    // store the authentication data which will use when user refresh the page 
     localStorage.setItem('userData', JSON.stringify(user));
   }
 
   /**
-   *
+   * @description autoLogin will handle to login the user whenever user refresh
+   *              It will check the authentical data in local storage 
    * @returns
    */
-  autoLogin() {
+  autoLogin(): void {
     let userData: {
       email: string;
       id: string;
       _token: string;
       _tokenExpiredDate: string;
     } = JSON.parse(localStorage.getItem('userData') || '{}');
+
+    // if not user data found then no action require 
     if (!userData) {
       return;
     }
 
+    // create new model data with updated expiration time 
     const loadedUser = new UserModel(
       userData.email,
       userData.id,
@@ -120,6 +133,7 @@ export class AuthService {
       new Date(userData._tokenExpiredDate)
     );
 
+    // if the token is valid the need the notify the update the user model data 
     if (loadedUser.token) {
       this.user.next(loadedUser);
       const expireDuration =
@@ -129,9 +143,10 @@ export class AuthService {
   }
 
   /**
-   *
+   * @description This method will handle to logout the user
+   *              - when logout the user data and token data need to clear and user need to redirect to login page. 
    */
-  logout() {
+  logout(): void {
     this.user.next(new UserModel('', '', '', new Date()));
     this._router.navigate(['/login']);
     localStorage.removeItem('userData');
@@ -143,7 +158,7 @@ export class AuthService {
   }
 
   /**
-   *
+   * @description depending on the timer, logout will execute for auto logout the user 
    * @param expirationDuration
    */
   autoLogout(expirationDuration: number) {
