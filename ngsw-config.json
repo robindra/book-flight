@@ -26,5 +26,17 @@
         ]
       }
     }
+  ],
+  "dataGroups": [
+    {
+    "name": "search-api",
+    "urls": ["https://test.api.amadeus.com/v1/shopping/availability/flight-availabilities"],
+    "cacheConfig": {
+      "strategy": "freshness",
+      "maxSize": 10,
+      "maxAge": "1h",
+      "timeout": "5s"
+      }
+    }
   ]
 }

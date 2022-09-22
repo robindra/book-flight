@@ -25,7 +25,7 @@ import { AmadeusToken } from 'src/app/shared/models/amadeus-token.model';
 import { AmadeusService } from 'src/app/shared/services/amadeus.service';
 
 import * as moment from 'moment';
-import { TripType } from '../interface/trip-type.interface';
+import { TripType } from '../interface/flight-types.interface';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -152,9 +152,9 @@ export class HomeComponent implements OnInit {
      * Detect any change on trip type to enable/disabled return date field
      */
     this.searchForm
-      .get('flyType')
-      ?.valueChanges.subscribe((flyType: string) => {
-        this.disableReturnDate = !(flyType == 'roundtrip');
+      .get('tripType')
+      ?.valueChanges.subscribe((tripType: string) => {
+        this.disableReturnDate = !(tripType == 'roundtrip');
       });
 
     /**
@@ -170,7 +170,7 @@ export class HomeComponent implements OnInit {
       ?.valueChanges.pipe(
         debounceTime(100),
         distinctUntilChanged(),
-        filter((searchText: string) => searchText.length >= 3),
+        filter((searchText: string) => searchText.length >= 3 && !(this.tripToDetails && searchText !== `${this.tripFromDetails.cityName} ${this.tripFromDetails.cityCode})`)),
         switchMap((searchText: string) =>
           this._amadeusService.getAirportsByText(searchText)
         )
@@ -193,7 +193,7 @@ export class HomeComponent implements OnInit {
       ?.valueChanges.pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        filter((searchText: string) => searchText.length > 3),
+        filter((searchText: string) => searchText.length > 3 && !(this.tripToDetails && searchText !== `${this.tripToDetails.cityName} ${this.tripToDetails.cityCode}`)),
         switchMap((searchText: string) =>
           this._amadeusService.getAirportsByText(searchText)
         )
@@ -300,11 +300,7 @@ export class HomeComponent implements OnInit {
    * This method will call whenever user submit the form
    * This is the main method which will handle to fetch avaialable flight details
    */
-  onSubmitSearchForm(): void {
-    this.noFlightFound = false;
-    this.isLoading = true;
-    this.isCarrierDataAvailable = false;
-    
+  onSubmitSearchForm(): void {   
 
     // the api require time time in the payload as we show only date selection so we need to create current time
     const currentTime = moment(new Date()).format('HH:mm:ss');
@@ -318,10 +314,18 @@ export class HomeComponent implements OnInit {
     // trip return date (if any)
     const returnDate = this.searchForm.value.returnOn;
 
-    // check the require field are entered 
-    if (!this.tripFromDetails.cityCode || !this.tripToDetails.cityCode || !departDate.length || !returnDate.length) {
+    // check the require field are entered
+    if (
+      !this.tripFromDetails.cityCode ||
+      !this.tripToDetails.cityCode ||
+      !departDate.length ||
+      (!returnDate.length && this.searchForm.value.tripType == 'roundtrip')
+    ) {
       return;
-    } 
+    }
+    this.noFlightFound = false;
+    this.isLoading = true;
+    this.isCarrierDataAvailable = false;
 
     // creating a variable to hold return flight search payload if user select two way trip
     let returnPayLoad: SearchPayLoad;
@@ -364,7 +368,7 @@ export class HomeComponent implements OnInit {
      * check whether user select the round trip if yes,
      * then we need to make a copy of oneWay payload and alter tripTo and tripFrom and update departure date
      */
-    if (this.searchForm.value.flyType == 'roundtrip') {
+    if (this.searchForm.value.tripType == 'roundtrip') {
       // creating copy of one way payload
       returnPayLoad = { ...oneWayPayLoad };
       returnPayLoad.originDestinations[0] = {
@@ -429,5 +433,9 @@ export class HomeComponent implements OnInit {
         this.carrierCodes = response;
         this.isCarrierDataAvailable = true;
       });
+  }
+
+  onClickSearchPage() {
+    this.airportWithCountryCode = [];
   }
 }

@@ -1,0 +1,19 @@
+{
+  "remoteconfig": {
+    "template": "remoteconfig.template.json"
+  },
+  "hosting": {
+    "public": "dist/book-flight",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

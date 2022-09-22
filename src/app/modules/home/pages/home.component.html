@@ -1,4 +1,4 @@
-<div class="section">
+<div class="section" (click)="onClickSearchPage()">
   <div class="section-center">
     <div class="container">
       <div class="row">
@@ -6,10 +6,7 @@
           <form [formGroup]="searchForm" (ngSubmit)="onSubmitSearchForm()">
             <div class="form-group">
               <div class="form-checkbox">
-                <label
-                  for="{{ trip.type }}"
-                  *ngFor="let trip of tripTypes"
-                >
+                <label for="{{ trip.type }}" *ngFor="let trip of tripTypes">
                   <input
                     type="radio"
                     id="{{ trip.type }}"
@@ -177,7 +174,13 @@
               </div>
               <div class="col-md-3">
                 <div class="form-btn">
-                  <button class="submit-btn" type="submit" [disabled]="isLoading">Show flights</button>
+                  <button
+                    class="submit-btn"
+                    type="submit"
+                    [disabled]="isLoading"
+                  >
+                    Show flights
+                  </button>
                 </div>
               </div>
             </div>
@@ -188,54 +191,20 @@
   </div>
 </div>
 
-<div *ngIf="isLoading" style="text-align: center;">
+<div *ngIf="isLoading" style="text-align: center">
   <app-loding-spinner></app-loding-spinner>
 </div>
-<div class="container" *ngIf="oneWaySerachResults.length && isCarrierDataAvailable">
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Sorted</th>
-        <th scope="col">Departure</th>
-        <th scope="col">Duration</th>
-        <th scope="col">Arival</th>
-        <th scope="col">Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let flightInfo of oneWaySerachResults">
-        <th scope="row">
-          <span
-            *ngFor="let carrier of flightInfo.summary.carrierCodes"
-            class="span-block"
-          >
-            {{ carrier.carrierCode|carrierName }}, {{ carrier.carrierCode }}-{{
-              carrier.aircraft
-            }}
-          </span>
-        </th>
-        <td>
-          {{ flightInfo.segments[0].departure.iataCode }} - T{{
-            flightInfo.segments[0].departure.terminal
-          }}
-          - {{ flightInfo.segments[0].departure.at }}
-        </td>
-        <td>{{flightInfo.summary.totalHours}} hours/ 
-          <div style="display: inline;">
-            <span>{{flightInfo.summary.routes.connecting > 0 ? flightInfo.summary.routes.connecting : 'No'}} Stop</span>
-          </div>
-          <div *ngIf="flightInfo.summary.routes.connecting > 0">
-            Via: 
-            <span *ngFor="let route of flightInfo.summary.routes.via" style="min-width: 20px;">{{route}} </span>
-          </div>
-        </td>
-          
-        <td>{{ flightInfo.summary.arrival.iataCode }} - T{{
-          flightInfo.summary.departure.terminal
-        }}
-        - {{ flightInfo.summary.departure.at }}</td>
-        <td>{{ flightInfo.summary.price }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+
+<app-search-results
+  *ngIf="isCarrierDataAvailable"
+  [searchResults]="oneWaySerachResults"
+  searchResultFor="One Way Trip Search Result"
+>
+</app-search-results>
+
+<app-search-results
+  *ngIf="isCarrierDataAvailable"
+  [searchResults]="returnSearchResults"
+  searchResultFor="Return Trip Search Result"
+>
+</app-search-results>
