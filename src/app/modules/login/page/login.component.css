@@ -1,0 +1,52 @@
+/ Change the white to any color /
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+
+.form-outline .form-control:focus{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+/ You can add global styles to this file, and also import other style files /
+.form-outline {
+    position: relative;
+}
+
+.form-outline .form-control~.form-label {
+    position: absolute;
+    top: 0;
+    max-width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    left: 0.75rem;
+    padding-top: 0.37rem;
+    pointer-events: none;
+    transform-origin: 0 0;
+    transition: all .2s ease-out;
+    color: rgba(0,0,0,.6);
+    margin-bottom: 0;
+}
+
+.form-outline .form-control:focus {
+    box-shadow: none!important;
+}
+
+.form-control:focus {
+    color: #4f4f4f;
+    background-color: #fff;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgb(59 113 202 / 25%);
+}
+
+.form-outline .form-control:focus~.form-label {
+    color: #3b71ca;
+}
+
+.form-outline .form-control.active~.form-label, .form-outline .form-control:focus~.form-label {
+    transform: translateY(-1rem) translateY(0.1rem) scale(.8);
+    background-color: #fff;
+}

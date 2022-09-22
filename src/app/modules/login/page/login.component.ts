@@ -38,8 +38,8 @@ export class LoginComponent implements OnInit {
 
     authObs.subscribe(
       (resData) => {
-        this.isLoading = false;
         this._router.navigate(['/home'])
+        this.isLoading = false;
       },
       (errorMessage) => {
         this.error = errorMessage;

@@ -1,6 +1,5 @@
-<!--login page-->
-<div class="row">  
-  <div class="col-6 m-auto">
+<div class="row">
+  <div class="col-5 mt-5 mb-5 p-5 m-auto" style="background-color: #fff;">
     <div class="alert alert-danger" *ngIf="error.length" style="text-align: center;">
       {{error}}
     </div>
@@ -8,21 +7,6 @@
       <app-loding-spinner></app-loding-spinner>
     </div>
     <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
-      <div class="text-center mb-3">
-        <p>Sign in with:</p>
-        <a
-          class="btn btn-primary btn-lg btn-block"
-          style="border-radius: 25px"
-          href="#!"
-          role="button"
-        >
-          <i class="fa fa-google"></i>Continue with Google
-        </a>
-      </div>
-
-      <p class="text-center">or:</p>
-
-      <!-- Email input -->
       <div class="form-outline mb-4">
         <label class="form-label" for="loginName">Email</label>
         <input
@@ -36,7 +20,6 @@
         />
       </div>
 
-      <!-- Password input -->
       <div class="form-outline mb-4">
         <label class="form-label" for="loginPassword">Password</label>
         <input
@@ -49,8 +32,6 @@
           minlength="6"
         />
       </div>
-
-      <!-- Submit button -->
       <div class="d-grid gap-2">
         <button
           class="btn btn-primary"
@@ -59,18 +40,15 @@
           [disabled]="!authForm.valid"
         >
           {{ isLogInMode ? "Login" : "Sign Up" }}
-        </button>
-        <button
-          class="btn btn-primary"
-          style="border-radius: 25px"
-          type="button"
-          (click)="onSwitchMode()"
-        >
-          Switch to {{ !isLogInMode ? "Login" : "Sign Up" }}
-        </button>
+        </button> <button
+        class="btn btn-primary"
+        style="border-radius: 25px"
+        type="button"
+        (click)="onSwitchMode()"
+      >
+        Switch to {{ !isLogInMode ? "Login" : "Sign Up" }}
+      </button>
       </div>
     </form>
   </div>
 </div>
-
-<!--login page-->
