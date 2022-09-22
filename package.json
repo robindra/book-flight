@@ -20,6 +20,7 @@
     "@angular/pwa": "^14.2.3",
     "@angular/router": "^14.2.0",
     "@angular/service-worker": "^14.2.0",
+    "angular-google-tag-manager": "^1.6.1",
     "bootstrap": "^5.2.1",
     "moment": "^2.29.4",
     "rxjs": "~7.5.0",
