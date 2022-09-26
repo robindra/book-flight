@@ -8,7 +8,7 @@ import { LodingSpinnerComponent } from './ui/loding-spinner/loding-spinner.compo
      ],
     declarations: [
         LodingSpinnerComponent,
-        CarrierNamePipe
+        CarrierNamePipe,
     ],
     exports: [
         LodingSpinnerComponent,

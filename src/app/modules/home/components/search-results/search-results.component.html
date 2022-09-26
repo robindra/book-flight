@@ -34,7 +34,10 @@
           class="click-event-pointer"
         >
           Duration
-          <i class="arrow up" [ngClass]="{'up': durationOrderByAsc, 'down': !durationOrderByAsc}"></i>
+          <i
+            class="arrow up"
+            [ngClass]="{ up: durationOrderByAsc, down: !durationOrderByAsc }"
+          ></i>
           <!-- <i class="arrow down"></i> -->
         </th>
         <th scope="col">Arival</th>
@@ -44,14 +47,17 @@
           class="click-event-pointer"
         >
           Price
-          <i class="arrow up" [ngClass]="{'up': priceOrderByAsc, 'down': !priceOrderByAsc }"></i>
+          <i
+            class="arrow up"
+            [ngClass]="{ up: priceOrderByAsc, down: !priceOrderByAsc }"
+          ></i>
           <!-- <i class="arrow down"></i> -->
         </th>
       </tr>
     </thead>
 
     <tbody>
-      <tr *ngFor="let flightInfo of searchResults | filterResults: filterCase">
+      <tr *ngFor="let flightInfo of searchResults | filterResults: filterCase |orderBy: orderBy">
         <th scope="row">
           <span
             *ngFor="let carrier of flightInfo.summary.carrierCodes"
@@ -99,7 +105,15 @@
             {{ flightInfo.summary.departure.at | date: "medium" }}</span
           >
         </td>
-        <td>{{ flightInfo.summary.price }}</td>
+        <td>
+          <span class="span-block">Per Person: {{
+            flightInfo.summary.price | currency: "INR":'symbol-narrow'
+          }}</span>
+          <span class="span-block">Total: {{
+            flightInfo.summary.price * totalTravellers | currency: "INR":'symbol-narrow'
+          }} 
+            </span> 
+        </td>
       </tr>
     </tbody>
   </table>

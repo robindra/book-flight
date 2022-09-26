@@ -9,9 +9,16 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class SearchResultsComponent implements OnInit, AfterViewInit {
   @Input('searchResults') searchResults: any;
   @Input('searchResultFor') searchResultFor: string;
+  @Input('totalTravellers') totalTravellers: number;
+
+  orderBy: string = "price_asc";
+
   priceOrderByAsc: boolean = true;
+
   durationOrderByAsc: boolean = true;
+
   filterCase: string = 'no-sort';
+
   connectingOptions: { type: string; label: string }[] = [
     { type: 'non-connecting', label: 'Non Connecting' },
     { type: 'connecting', label: 'Connecting' },
@@ -34,12 +41,12 @@ export class SearchResultsComponent implements OnInit, AfterViewInit {
   sortResult(sortBy: string) {
     if (sortBy == 'price') {
       this.priceOrderByAsc = !this.priceOrderByAsc;
-      this.filterCase = this.priceOrderByAsc ? 'price_asc' : 'price_dsc';
+      this.orderBy = this.priceOrderByAsc ? 'price_asc' : 'price_dsc';
     }
 
     if (sortBy == 'duration') {
       this.durationOrderByAsc = !this.durationOrderByAsc;
-      this.filterCase = this.durationOrderByAsc
+      this.orderBy = this.durationOrderByAsc
         ? 'duration_asc'
         : 'duration_dsc';
     }   
