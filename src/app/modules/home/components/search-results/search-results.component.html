@@ -107,10 +107,10 @@
         </td>
         <td>
           <span class="span-block">Per Person: {{
-            flightInfo.summary.price | currency: "INR":"symbol"
+            flightInfo.summary.price | currency: "INR":'symbol-narrow'
           }}</span>
           <span class="span-block">Total: {{
-            flightInfo.summary.price * totalTravellers | currency: "INR":"symbol"
+            flightInfo.summary.price * totalTravellers | currency: "INR":'symbol-narrow'
           }} 
             </span> 
         </td>
