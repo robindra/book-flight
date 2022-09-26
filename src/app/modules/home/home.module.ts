@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/share.module';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { FilterResultsPipe } from './pipes/filter-results.pipe';
+import { OrderByPipe } from './pipes/order-by.pipe';
 
 
 
@@ -14,7 +15,8 @@ import { FilterResultsPipe } from './pipes/filter-results.pipe';
   declarations: [
     HomeComponent, 
     SearchResultsComponent,
-    FilterResultsPipe
+    FilterResultsPipe,
+    OrderByPipe
   ],
   imports: [
     CommonModule,

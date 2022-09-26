@@ -48,9 +48,8 @@ export class HomeComponent implements OnInit {
    */
   travellers: number[] = [...Array(15).keys()];
 
-
   /**
-   * This variable wll store the total number traveller adults + children 
+   * This variable wll store the total number traveller adults + children
    */
   totalTravellers: number = 0;
 
@@ -176,7 +175,16 @@ export class HomeComponent implements OnInit {
       ?.valueChanges.pipe(
         debounceTime(100),
         distinctUntilChanged(),
-        filter((searchText: string) => searchText.length >= 3 && !(this.tripToDetails && searchText !== `${this.tripFromDetails.cityName} ${this.tripFromDetails.cityCode})`)),
+        filter(
+          (searchText: string) =>
+            searchText.length >= 3
+            // &&
+            // !(
+            //   this.tripToDetails &&
+            //   searchText !==
+            //     `${this.tripFromDetails.cityName} ${this.tripFromDetails.cityCode})`
+            // )
+        ),
         switchMap((searchText: string) =>
           this._amadeusService.getAirportsByText(searchText)
         )
@@ -199,7 +207,16 @@ export class HomeComponent implements OnInit {
       ?.valueChanges.pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        filter((searchText: string) => searchText.length > 3 && !(this.tripToDetails && searchText !== `${this.tripToDetails.cityName} ${this.tripToDetails.cityCode}`)),
+        filter(
+          (searchText: string) =>
+            searchText.length > 3
+            // &&
+            // !(
+            //   this.tripToDetails &&
+            //   searchText !==
+            //     `${this.tripToDetails.cityName} ${this.tripToDetails.cityCode}`
+            // )
+        ),
         switchMap((searchText: string) =>
           this._amadeusService.getAirportsByText(searchText)
         )
@@ -306,8 +323,7 @@ export class HomeComponent implements OnInit {
    * This method will call whenever user submit the form
    * This is the main method which will handle to fetch avaialable flight details
    */
-  onSubmitSearchForm(): void {   
-
+  onSubmitSearchForm(): void {
     // the api require time time in the payload as we show only date selection so we need to create current time
     const currentTime = moment(new Date()).format('HH:mm:ss');
 
@@ -320,14 +336,16 @@ export class HomeComponent implements OnInit {
     // trip return date (if any)
     const returnDate = this.searchForm.value.returnOn;
 
-    this.totalTravellers = +this.searchForm.value.adults + +this.searchForm.value.children;
+    this.totalTravellers =
+      +this.searchForm.value.adults + +this.searchForm.value.children;
 
     // check the require field are entered
     if (
       !this.tripFromDetails.cityCode ||
       !this.tripToDetails.cityCode ||
       !departDate.length ||
-      (!returnDate.length && this.searchForm.value.tripType == 'roundtrip')
+      (!returnDate.length && this.searchForm.value.tripType == 'roundtrip') ||
+      adultTravellerCount < 1
     ) {
       return;
     }
@@ -412,6 +430,7 @@ export class HomeComponent implements OnInit {
       }
       // reset the flag to shid ethe loader
       this.isLoading = false;
+      this.searchForm.reset();
     });
   }
 

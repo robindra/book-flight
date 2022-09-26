@@ -57,7 +57,7 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let flightInfo of searchResults | filterResults: filterCase">
+      <tr *ngFor="let flightInfo of searchResults | filterResults: filterCase |orderBy: orderBy">
         <th scope="row">
           <span
             *ngFor="let carrier of flightInfo.summary.carrierCodes"
