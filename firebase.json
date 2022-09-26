@@ -3,7 +3,7 @@
     "template": "remoteconfig.template.json"
   },
   "hosting": {
-    "public": "dist/book-flight",
+    "public": "dist/book-flight/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
