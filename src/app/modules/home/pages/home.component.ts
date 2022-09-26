@@ -48,6 +48,12 @@ export class HomeComponent implements OnInit {
    */
   travellers: number[] = [...Array(15).keys()];
 
+
+  /**
+   * This variable wll store the total number traveller adults + children 
+   */
+  totalTravellers: number = 0;
+
   /**
    * This field will use to control/disable fromDate field from selecting past date
    * Initial the value should be today date
@@ -313,6 +319,8 @@ export class HomeComponent implements OnInit {
 
     // trip return date (if any)
     const returnDate = this.searchForm.value.returnOn;
+
+    this.totalTravellers = +this.searchForm.value.adults + +this.searchForm.value.children;
 
     // check the require field are entered
     if (

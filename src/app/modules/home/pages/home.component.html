@@ -198,6 +198,7 @@
 <app-search-results
   *ngIf="isCarrierDataAvailable"
   [searchResults]="oneWaySerachResults"
+  [totalTravellers]="totalTravellers"
   searchResultFor="One Way Trip Search Result"
 >
 </app-search-results>
@@ -205,6 +206,7 @@
 <app-search-results
   *ngIf="isCarrierDataAvailable"
   [searchResults]="returnSearchResults"
+  [totalTravellers]="totalTravellers"
   searchResultFor="Return Trip Search Result"
 >
 </app-search-results>

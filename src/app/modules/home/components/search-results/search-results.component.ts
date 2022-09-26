@@ -9,9 +9,14 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class SearchResultsComponent implements OnInit, AfterViewInit {
   @Input('searchResults') searchResults: any;
   @Input('searchResultFor') searchResultFor: string;
+  @Input('totalTravellers') totalTravellers: number;
+
   priceOrderByAsc: boolean = true;
+
   durationOrderByAsc: boolean = true;
+
   filterCase: string = 'no-sort';
+  
   connectingOptions: { type: string; label: string }[] = [
     { type: 'non-connecting', label: 'Non Connecting' },
     { type: 'connecting', label: 'Connecting' },
