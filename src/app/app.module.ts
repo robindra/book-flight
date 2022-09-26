@@ -11,11 +11,12 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { DatePipe } from '@angular/common';
 import { GoogleTagManagerModule } from 'angular-google-tag-manager';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
@@ -27,7 +28,8 @@ import { GoogleTagManagerModule } from 'angular-google-tag-manager';
     }),
     GoogleTagManagerModule.forRoot({
       id: 'G-P4RFY863B2',
-    })
+    }),
+    RouterModule
   ],
   providers: [
     {
