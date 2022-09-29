@@ -177,7 +177,7 @@ export class HomeComponent implements OnInit {
         distinctUntilChanged(),
         filter(
           (searchText: string) =>
-            searchText.length >= 3
+          searchText != null && searchText.length >= 3
             // &&
             // !(
             //   this.tripToDetails &&
@@ -209,7 +209,7 @@ export class HomeComponent implements OnInit {
         distinctUntilChanged(),
         filter(
           (searchText: string) =>
-            searchText.length > 3
+          searchText != null && searchText.length > 3
             // &&
             // !(
             //   this.tripToDetails &&
