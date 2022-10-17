@@ -8,6 +8,7 @@ import { SharedModule } from 'src/app/shared/share.module';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { FilterResultsPipe } from './pipes/filter-results.pipe';
 import { OrderByPipe } from './pipes/order-by.pipe';
+import { FlightDetailsComponent } from './components/flight-details/flight-details.component';
 
 
 
@@ -16,7 +17,8 @@ import { OrderByPipe } from './pipes/order-by.pipe';
     HomeComponent, 
     SearchResultsComponent,
     FilterResultsPipe,
-    OrderByPipe
+    OrderByPipe,
+    FlightDetailsComponent
   ],
   imports: [
     CommonModule,

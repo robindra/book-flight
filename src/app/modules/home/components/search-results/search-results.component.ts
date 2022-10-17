@@ -11,6 +11,7 @@ export class SearchResultsComponent implements OnInit, AfterViewInit {
   @Input('searchResultFor') searchResultFor: string;
   @Input('totalTravellers') totalTravellers: number;
 
+  selectedSegments: any;
   orderBy: string = "price_asc";
 
   priceOrderByAsc: boolean = true;
@@ -50,5 +51,9 @@ export class SearchResultsComponent implements OnInit, AfterViewInit {
         ? 'duration_asc'
         : 'duration_dsc';
     }   
+  }
+
+  viewFlightDetails = (flightDetails:any):void => {
+    console.log(flightDetails)
   }
 }

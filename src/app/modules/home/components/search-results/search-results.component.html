@@ -113,8 +113,12 @@
             flightInfo.summary.price * totalTravellers | currency: "INR":'symbol-narrow'
           }} 
             </span> 
+            <button type="button" (click)="viewFlightDetails(flightInfo.segments)">View Details</button>
         </td>
       </tr>
     </tbody>
   </table>
+  <div>
+    <app-flight-details [segmentations]="selectedSegments"></app-flight-details>
+  </div>
 </div>
